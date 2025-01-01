@@ -13,7 +13,6 @@ function getData() {
             res = data;
             populateTable(res.tradeHistory);
             totalPnl = calculateTotalPnL(res.tradeHistory);
-            console.log("res", res, totalPnl)
             document.getElementById("pnl").innerHTML = totalPnl + " INR";
             document.getElementById("capital").innerHTML = res?.cardData?.capital + " INR";
             res.cardData.balance = res?.cardData?.capital + (calculateTotalPnL(res.tradeHistory));
@@ -37,7 +36,7 @@ function populateTable(data) {
             i + 1, // Handle missing "id"
             item.name,
             item.type,
-            item.direction + " " + item.pnl / 2,
+            item.direction === "+" ? item.direction + " " + item.pnl * 0.25 : item.direction + " " + item.pnl / 2,
             item.date,
         ];
 
@@ -54,7 +53,7 @@ function populateTable(data) {
 function calculateTotalPnL(data) {
     return data.reduce((sum, item) => {
         return item.direction === "+"
-            ? sum + item.pnl / 2
+            ? sum + (item.pnl * 0.25)
             : sum - item.pnl / 2;
     }, 0);
 }
