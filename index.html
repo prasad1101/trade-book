@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Hello, world!</title>
+    <script src="./script.js"></script>
+</head>
+
+<body>
+    <div class="flex m-2">
+        <div class="card flex-1 m-2" style="width: 18rem;">
+            <div class="card-header bg-[#b7ceef]">
+                Capital
+            </div>
+            <div class="card-body">
+                <h5 id="capital" class="card-title">0 INR</h5>
+            </div>
+        </div>
+        <div class="card flex-1 m-2" style="width: 18rem;">
+            <div class=" card-header bg-[#b7ceef]">
+                PnL
+            </div>
+            <div class="card-body">
+                <h5 id="pnl" class="card-title">0 INR</h5>
+            </div>
+        </div>
+        <div class="card flex-1 m-2" style="width: 18rem;">
+            <div class=" card-header bg-[#b7ceef]">
+                Current Balance
+            </div>
+            <div class="card-body">
+                <h5 id="balance" class="card-title">0 INR</h5>
+            </div>
+        </div>
+        <div class="card flex-1 m-2" style="width: 18rem;">
+            <div class=" card-header bg-[#b7ceef]">
+                Gain
+            </div>
+            <div class="card-body">
+                <h5 id="gain" class="card-title">0 INR</h5>
+            </div>
+        </div>
+    </div>
+
+    <div class="flex m-4">
+        <table id="investmentTable" class="table table-bordered">
+            <thead>
+                <tr class="bg-[#b7ceef]">
+                    <th scope="col">#</th>
+                    <th scope="col">Stock/Index</th>
+                    <th scope="col">Type</th>
+                    <th scope="col">P/L</th>
+                    <th scope="col">Date</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        getData();
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
