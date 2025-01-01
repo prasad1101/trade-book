@@ -18,7 +18,7 @@ function getData() {
             document.getElementById("capital").innerHTML = res?.cardData?.capital + " INR";
             res.cardData.balance = res?.cardData?.capital + (calculateTotalPnL(res.tradeHistory));
             document.getElementById("balance").innerHTML = res?.cardData?.capital + (calculateTotalPnL(res.tradeHistory)) + " INR";
-            let dir = `${res.cardData.balance < res.cardData.capital ? "- " : "+ "}`;
+            let dir = `${res.cardData.balance < res.cardData.capital ? "-" : "+"}`;
             document.getElementById("gain").innerHTML = dir + (res?.cardData?.balance / res?.cardData?.capital) * 100 + " %";
 
         })
