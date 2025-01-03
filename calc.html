@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>TradeBook</title>
+    <script src="./calc-script.js"></script>
+</head>
+
+<body class="bg-gray-100">
+    <div class="flex p-2 bg-[#b7ceef]">
+        <h2>Trade Calclator</h2>
+    </div>
+
+
+
+    <div class="flex flex-col p-2">
+        <h2 class="mb-2">
+            Lot Calculator
+        </h2>
+        <input id="capital" class="form-control form-control-sm mb-2" type="number" placeholder="Capital">
+        <input id="lotSize" class="form-control form-control-sm mb-2" type="number" placeholder="Lot Size">
+        <input id="entryPrice" class="form-control form-control-sm mb-2" type="number" placeholder="Entry Price">
+        <input id="sl" class="form-control form-control-sm mb-2" type="number" placeholder="SL">
+        <input id="risk" class="form-control form-control-sm mb-2" type="number" placeholder="Risk %">
+
+        <button class="btn btn-primary"
+            onclick="calculate(capital.value,lotSize.value,entryPrice.value,sl.value,risk.value)">Calculate Lot
+            Size</button>
+    </div>
+
+    <div class="flex flex-wrap sm:flex-col m-2">
+        <div class="card flex-1 m-2" style="width: 18rem;">
+            <div class="card-header bg-[#b7ceef]">
+                Your Lot Size
+            </div>
+            <div class="card-body">
+                <h5 id="capitalCard" class="card-title"></h5>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

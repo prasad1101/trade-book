@@ -19,6 +19,17 @@ function getData() {
             document.getElementById("balance").innerHTML = res?.cardData?.capital + (calculateTotalPnL(res.tradeHistory)) + " INR";
             let dir = `${res.cardData.balance < res.cardData.capital ? "-" : "+"}`;
             document.getElementById("gain").innerHTML = dir + (res?.cardData?.balance / res?.cardData?.capital) * 100 + " %";
+            if (dir === "+") {
+                document.getElementById("gain").classList.add("gain")
+            } else {
+                document.getElementById("gain").classList.add("loss")
+            }
+
+            if (totalPnl > 0) {
+                document.getElementById("pnl").classList.add("gain")
+            } else {
+                document.getElementById("pnl").classList.add("loss")
+            }
 
         })
         .catch(error => {
@@ -40,8 +51,16 @@ function populateTable(data) {
             item.date,
         ];
 
-        cells.forEach(cellText => {
+        cells.forEach((cellText, i) => {
+            console.log("celltext", i, cellText)
             const td = document.createElement('td');
+            if (i === 3) {
+                if (item.direction === "+") {
+                    td.classList.add("gain")
+                } else {
+                    td.classList.add("loss")
+                }
+            }
             td.textContent = cellText;
             row.appendChild(td);
         });
