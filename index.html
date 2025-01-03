@@ -29,59 +29,75 @@
 </head>
 
 <body class="bg-gray-100">
-    <div class="flex p-2 bg-[#b7ceef]">
-        <h2>Tradebook</h2>
-    </div>
-    <div class="flex flex-wrap sm:flex-col m-2">
-        <div class="card flex-1 m-2" style="width: 18rem;">
-            <div class="card-header bg-[#b7ceef]">
-                Capital
+    <div style="display: none;" id="dashboard">
+        <div class="flex p-2 bg-[#b7ceef]">
+            <h2>Tradebook <span id="username"></span></h2>
+        </div>
+        <div class="flex flex-wrap sm:flex-col m-2">
+            <div class="card flex-1 m-2" style="width: 18rem;">
+                <div class="card-header bg-[#b7ceef]">
+                    Capital
+                </div>
+                <div class="card-body">
+                    <h5 id="capital" class="card-title">0 INR</h5>
+                </div>
             </div>
-            <div class="card-body">
-                <h5 id="capital" class="card-title">0 INR</h5>
+            <div class="card flex-1 m-2" style="width: 18rem;">
+                <div class="card-header bg-[#b7ceef]">
+                    PnL
+                </div>
+                <div class="card-body">
+                    <h5 id="pnl" class="card-title">0 INR</h5>
+                </div>
+            </div>
+            <div class="card flex-1 m-2" style="width: 18rem;">
+                <div class="card-header bg-[#b7ceef]">
+                    Current Balance
+                </div>
+                <div class="card-body">
+                    <h5 id="balance" class="card-title">0 INR</h5>
+                </div>
+            </div>
+            <div class="card flex-1 m-2" style="width: 18rem;">
+                <div class="card-header bg-[#b7ceef]">
+                    Gain
+                </div>
+                <div class="card-body">
+                    <h5 id="gain" class="card-title">0 INR</h5>
+                </div>
             </div>
         </div>
-        <div class="card flex-1 m-2" style="width: 18rem;">
-            <div class="card-header bg-[#b7ceef]">
-                PnL
-            </div>
-            <div class="card-body">
-                <h5 id="pnl" class="card-title">0 INR</h5>
-            </div>
-        </div>
-        <div class="card flex-1 m-2" style="width: 18rem;">
-            <div class="card-header bg-[#b7ceef]">
-                Current Balance
-            </div>
-            <div class="card-body">
-                <h5 id="balance" class="card-title">0 INR</h5>
-            </div>
-        </div>
-        <div class="card flex-1 m-2" style="width: 18rem;">
-            <div class="card-header bg-[#b7ceef]">
-                Gain
-            </div>
-            <div class="card-body">
-                <h5 id="gain" class="card-title">0 INR</h5>
-            </div>
+
+        <div class="flex m-4 overflow-x-auto">
+            <table id="investmentTable" class="table table-bordered w-full">
+                <thead>
+                    <tr class="bg-[#b7ceef]">
+                        <th scope="col">#</th>
+                        <th scope="col">Stock/Index</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">P/L</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
         </div>
     </div>
 
-    <div class="flex m-4 overflow-x-auto">
-        <table id="investmentTable" class="table table-bordered w-full">
-            <thead>
-                <tr class="bg-[#b7ceef]">
-                    <th scope="col">#</th>
-                    <th scope="col">Stock/Index</th>
-                    <th scope="col">Type</th>
-                    <th scope="col">P/L</th>
-                    <th scope="col">Date</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        </table>
+
+    <div id="login" class="flex flex-col p-2">
+        <h1 class="mb-2 text-center" style="font-size: x-large;">
+            Sign In
+        </h1>
+        <p style="display: none;" class="loss" id="loginError">*Enter Valid Username or Password</p>
+        <input id="username1" class="form-control form-control-sm mb-2" type="text" placeholder="Username">
+        <input id="password" class="form-control form-control-sm mb-2" type="password" placeholder="Password">
+
+
+        <button class="btn btn-primary" onclick="login(username1.value,password.value)">Sign In</button>
     </div>
+
 
     <script>
         getData();
