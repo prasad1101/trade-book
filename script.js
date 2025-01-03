@@ -73,7 +73,8 @@ function login(un, pwd) {
         userDetails.cardData.balance = userDetails?.cardData?.capital + (calculateTotalPnL(userDetails.tradeHistory));
         document.getElementById("balance").innerHTML = userDetails?.cardData?.capital + (calculateTotalPnL(userDetails.tradeHistory)) + " INR";
         let dir = `${userDetails.cardData.balance < userDetails.cardData.capital ? "-" : "+"}`;
-        document.getElementById("gain").innerHTML = dir + (userDetails?.cardData?.balance / userDetails?.cardData?.capital) * 100 + " %";
+        let totalGain = ((totalPnl / userDetails?.cardData?.capital) * 100).toFixed(1);
+        document.getElementById("gain").innerHTML = (totalGain > 0 ? "+" + totalGain : totalGain) + " %";
         if (dir === "+") {
             document.getElementById("gain").classList.add("gain")
         } else {
