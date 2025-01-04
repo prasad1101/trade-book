@@ -19,16 +19,17 @@ function getData() {
         });
 }
 
-function populateTable(data) {
+function populateTable(role, data) {
     const tableBody = document.querySelector('#investmentTable tbody');
     data.forEach((item, i) => {
         const row = document.createElement('tr');
+        let percentage = role === "family" ? 0.5 : 0.25;
 
         const cells = [
             i + 1, // Handle missing "id"
             item.name,
             item.type,
-            item.direction === "+" ? item.direction + " " + item.pnl * 0.25 : item.direction + " " + item.pnl / 2,
+            item.direction === "+" ? item.direction + " " + item.pnl * percentage : item.direction + " " + item.pnl / 2,
             item.date,
         ];
 
@@ -49,10 +50,11 @@ function populateTable(data) {
     });
 }
 
-function calculateTotalPnL(data) {
+function calculateTotalPnL(role, data) {
     return data.reduce((sum, item) => {
+        let percentage = role === "family" ? 0.5 : 0.25;
         return item.direction === "+"
-            ? sum + (item.pnl * 0.25)
+            ? sum + (item.pnl * percentage)
             : sum - item.pnl / 2;
     }, 0);
 }
@@ -62,16 +64,14 @@ function login(un, pwd) {
         document.getElementById("login").style = "display:none;"
         document.getElementById("dashboard").style = "display:block;"
         document.getElementById("loginError").style = "display:none;"
-
         userDetails = validateCredentials(res, un, pwd);
-
         document.getElementById("username").innerHTML = `(${userDetails.user.name})`;
-        populateTable(userDetails.tradeHistory);
-        totalPnl = calculateTotalPnL(userDetails.tradeHistory);
+        populateTable(userDetails.user.role, userDetails.tradeHistory);
+        totalPnl = calculateTotalPnL(userDetails.user.role, userDetails.tradeHistory);
         document.getElementById("pnl").innerHTML = totalPnl + " INR";
         document.getElementById("capital").innerHTML = userDetails?.cardData?.capital + " INR";
-        userDetails.cardData.balance = userDetails?.cardData?.capital + (calculateTotalPnL(userDetails.tradeHistory));
-        document.getElementById("balance").innerHTML = userDetails?.cardData?.capital + (calculateTotalPnL(userDetails.tradeHistory)) + " INR";
+        userDetails.cardData.balance = userDetails?.cardData?.capital + (calculateTotalPnL(userDetails.user.role, userDetails.tradeHistory));
+        document.getElementById("balance").innerHTML = userDetails?.cardData?.capital + (calculateTotalPnL(userDetails.user.role, userDetails.tradeHistory)) + " INR";
         let dir = `${userDetails.cardData.balance < userDetails.cardData.capital ? "-" : "+"}`;
         let totalGain = ((totalPnl / userDetails?.cardData?.capital) * 100).toFixed(1);
         document.getElementById("gain").innerHTML = (totalGain > 0 ? "+" + totalGain : totalGain) + " %";
