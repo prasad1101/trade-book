@@ -2,20 +2,15 @@
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
     <title>TradeBook</title>
-    <script src="./script.js"></script>
     <style>
         body {
-            font-size: x-small !important;
+            font-size: small;
         }
 
         .gain {
@@ -29,39 +24,33 @@
 </head>
 
 <body class="bg-gray-100">
+    <!-- Dashboard -->
     <div style="display: none;" id="dashboard">
-        <div class="flex p-2 bg-[#b7ceef]">
+        <div class="flex justify-between items-center p-2 bg-[#b7ceef]">
             <h2>Tradebook <span id="username"></span></h2>
+            <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
         </div>
-        <div class="flex flex-wrap sm:flex-col m-2">
+        <div class="flex flex-wrap sm:flex-col md:flex-row lg:flex-row m-2">
             <div class="card flex-1 m-2" style="width: 18rem;">
-                <div class="card-header bg-[#b7ceef]">
-                    Capital
-                </div>
+                <div class="card-header bg-[#b7ceef]">Capital</div>
                 <div class="card-body">
                     <h5 id="capital" class="card-title">0 INR</h5>
                 </div>
             </div>
             <div class="card flex-1 m-2" style="width: 18rem;">
-                <div class="card-header bg-[#b7ceef]">
-                    PnL
-                </div>
+                <div class="card-header bg-[#b7ceef]">PnL</div>
                 <div class="card-body">
                     <h5 id="pnl" class="card-title">0 INR</h5>
                 </div>
             </div>
             <div class="card flex-1 m-2" style="width: 18rem;">
-                <div class="card-header bg-[#b7ceef]">
-                    Current Balance
-                </div>
+                <div class="card-header bg-[#b7ceef]">Current Balance</div>
                 <div class="card-body">
                     <h5 id="balance" class="card-title">0 INR</h5>
                 </div>
             </div>
             <div class="card flex-1 m-2" style="width: 18rem;">
-                <div class="card-header bg-[#b7ceef]">
-                    Gain
-                </div>
+                <div class="card-header bg-[#b7ceef]">Gain</div>
                 <div class="card-body">
                     <h5 id="gain" class="card-title">0 INR</h5>
                 </div>
@@ -72,36 +61,44 @@
             <table id="investmentTable" class="table table-bordered w-full">
                 <thead>
                     <tr class="bg-[#b7ceef]">
-                        <th scope="col">#</th>
-                        <th scope="col">Stock/Index</th>
-                        <th scope="col">Type</th>
-                        <th scope="col">P/L</th>
-                        <th scope="col">Date</th>
+                        <th>#</th>
+                        <th>Stock/Index</th>
+                        <th>Type</th>
+                        <th>P/L</th>
+                        <th>Date</th>
+                        </tr>
+                        </thead>
+                        <tbody></tbody>
+                        </table>
+                        </div>
+                        
+                        <div class="m-4">
+                            <h5 class="mb-2">Monthly Summary</h5>
+                            <table class="table table-bordered w-full">
+                                <thead class="bg-[#b7ceef]">
+                                    <tr>
+                                        <th>Month</th>
+                                        <th>Total PnL</th>
                     </tr>
                 </thead>
-                <tbody>
-                </tbody>
+                <tbody id="monthlySummary"></tbody>
             </table>
         </div>
     </div>
 
-
-    <div id="login" class="flex flex-col p-2">
-        <h1 class="mb-2 text-center" style="font-size: x-large;">
-            Sign In
-        </h1>
-        <p style="display: none;" class="loss" id="loginError">*Enter Valid Username or Password</p>
-        <input id="username1" class="form-control form-control-sm mb-2" type="text" placeholder="Username">
-        <input id="password" class="form-control form-control-sm mb-2" type="password" placeholder="Password">
-
-
-        <button class="btn btn-primary" onclick="login(username1.value,password.value)">Sign In</button>
+    <!-- Login -->
+    <div id="login" class="flex flex-col items-center justify-center min-h-screen bg-white p-4">
+        <div class="w-full max-w-xs p-6 bg-gray-100 rounded shadow">
+            <h1 class="mb-4 text-center text-xl font-semibold">Sign In</h1>
+            <p style="display: none;" class="loss text-sm mb-2 text-red-500 text-center" id="loginError">*Enter Valid
+                Username or Password</p>
+            <input id="username1" class="form-control form-control-sm mb-2" type="text" placeholder="Username">
+            <input id="password" class="form-control form-control-sm mb-3" type="password" placeholder="Password">
+            <button class="btn btn-primary w-full" onclick="login(username1.value,password.value)">Sign In</button>
+            </div>
     </div>
 
-
-    <script>
-        getData();
-    </script>
+    <script src="script.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
