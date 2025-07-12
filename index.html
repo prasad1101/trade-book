@@ -1,108 +1,176 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-    <title>TradeBook</title>
-    <style>
-        body {
-            font-size: small;
-        }
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+    crossorigin="anonymous"
+  />
+  <link
+    rel="stylesheet"
+    href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css"
+  />
+  <title>TradeBook</title>
+  <style>
+    html,
+    body {
+      height: 100%;
+      width: 100%;
+      overflow-x: hidden;
+      font-size: small;
+    }
 
-        .gain {
-            color: green !important;
-        }
+    .gain {
+      color: green !important;
+    }
 
-        .loss {
-            color: red !important;
-        }
-    </style>
+    .loss {
+      color: red !important;
+    }
+
+    .dataTables_wrapper .dataTables_filter {
+      float: right !important;
+      text-align: right !important;
+    }
+
+    .table-responsive {
+      overflow-x: auto;
+    }
+    .table-title{
+        position: absolute;
+        left: 0.5rem;
+        top: 1rem;
+        font-weight: bolder;
+    }
+  </style>
 </head>
-
 <body class="bg-gray-100">
-    <!-- Dashboard -->
-    <div style="display: none;" id="dashboard">
-        <div class="flex justify-between items-center p-2 bg-[#b7ceef]">
-            <h2>Tradebook <span id="username"></span></h2>
-            <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
-        </div>
-        <div class="flex flex-wrap sm:flex-col md:flex-row lg:flex-row m-2">
-            <div class="card flex-1 m-2" style="width: 18rem;">
-                <div class="card-header bg-[#b7ceef]">Capital</div>
-                <div class="card-body">
-                    <h5 id="capital" class="card-title">0 INR</h5>
-                </div>
-            </div>
-            <div class="card flex-1 m-2" style="width: 18rem;">
-                <div class="card-header bg-[#b7ceef]">PnL</div>
-                <div class="card-body">
-                    <h5 id="pnl" class="card-title">0 INR</h5>
-                </div>
-            </div>
-            <div class="card flex-1 m-2" style="width: 18rem;">
-                <div class="card-header bg-[#b7ceef]">Current Balance</div>
-                <div class="card-body">
-                    <h5 id="balance" class="card-title">0 INR</h5>
-                </div>
-            </div>
-            <div class="card flex-1 m-2" style="width: 18rem;">
-                <div class="card-header bg-[#b7ceef]">Gain</div>
-                <div class="card-body">
-                    <h5 id="gain" class="card-title">0 INR</h5>
-                </div>
-            </div>
-        </div>
-
-        <div class="flex m-4 overflow-x-auto">
-            <table id="investmentTable" class="table table-bordered w-full">
-                <thead>
-                    <tr class="bg-[#b7ceef]">
-                        <th>#</th>
-                        <th>Stock/Index</th>
-                        <th>Type</th>
-                        <th>P/L</th>
-                        <th>Date</th>
-                        </tr>
-                        </thead>
-                        <tbody></tbody>
-                        </table>
-                        </div>
-                        
-                        <div class="m-4">
-                            <h5 class="mb-2">Monthly Summary</h5>
-                            <table class="table table-bordered w-full">
-                                <thead class="bg-[#b7ceef]">
-                                    <tr>
-                                        <th>Month</th>
-                                        <th>Total PnL</th>
-                    </tr>
-                </thead>
-                <tbody id="monthlySummary"></tbody>
-            </table>
-        </div>
+  <!-- Dashboard -->
+  <div style="display: none" id="dashboard">
+    <div class="flex justify-between items-center p-2 bg-[#b7ceef]">
+      <h2>Tradebook <span id="username"></span></h2>
+      <button class="btn btn-sm btn-danger" onclick="logout()">Logout</button>
     </div>
 
-    <!-- Login -->
-    <div id="login" class="flex flex-col items-center justify-center min-h-screen bg-white p-4">
-        <div class="w-full max-w-xs p-6 bg-gray-100 rounded shadow">
-            <h1 class="mb-4 text-center text-xl font-semibold">Sign In</h1>
-            <p style="display: none;" class="loss text-sm mb-2 text-red-500 text-center" id="loginError">*Enter Valid
-                Username or Password</p>
-            <input id="username1" class="form-control form-control-sm mb-2" type="text" placeholder="Username">
-            <input id="password" class="form-control form-control-sm mb-3" type="password" placeholder="Password">
-            <button class="btn btn-primary w-full" onclick="login(username1.value,password.value)">Sign In</button>
-            </div>
+    <div class="w-100 px-3">
+      <!-- Stats Cards -->
+      <div class="flex flex-wrap sm:flex-col md:flex-row lg:flex-row m-2">
+        <div class="card flex-1 m-2" style="width: 18rem">
+          <div class="card-header bg-[#b7ceef]">Capital</div>
+          <div class="card-body">
+            <h5 id="capital" class="card-title">0 INR</h5>
+          </div>
+        </div>
+        <div class="card flex-1 m-2" style="width: 18rem">
+          <div class="card-header bg-[#b7ceef]">PnL</div>
+          <div class="card-body">
+            <h5 id="pnl" class="card-title">0 INR</h5>
+          </div>
+        </div>
+        <div class="card flex-1 m-2" style="width: 18rem">
+          <div class="card-header bg-[#b7ceef]">Brokerage Paid</div>
+          <div class="card-body">
+            <h5 id="brokeragePaid" class="card-title">0 INR</h5>
+          </div>
+        </div>
+        <div class="card flex-1 m-2" style="width: 18rem">
+          <div class="card-header bg-[#b7ceef]">Current Balance</div>
+          <div class="card-body">
+            <h5 id="balance" class="card-title">0 INR</h5>
+          </div>
+        </div>
+        <div class="card flex-1 m-2" style="width: 18rem">
+          <div class="card-header bg-[#b7ceef]">Gain</div>
+          <div class="card-body">
+            <h5 id="gain" class="card-title">0 INR</h5>
+          </div>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="table-responsive px-3 relative">
+        <h5 class="mb-2 absolute table-title">Trades Summary</h5>
+        <table
+          id="investmentTable"
+          class="table table-bordered table-striped table-hover w-100"
+        >
+          <thead class="bg-[#b7ceef]">
+            <tr>
+              <th>#</th>
+              <th>Stock/Index</th>
+              <th>Type</th>
+              <th>P/L</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+
+      <!-- Monthly Summary -->
+      <div class="m-4 relative">
+        <h5 class="mb-2 absolute table-title">Monthly Summary</h5>
+        <table id="monthlySummaryTable" class="table table-bordered table-striped table-hover w-100">
+            <thead class="bg-[#b7ceef]">
+              <tr>
+                <th>Month</th>
+                <th>Total PnL</th>
+              </tr>
+            </thead>
+            <tbody id="monthlySummary"></tbody>
+          </table>
+      </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
+  <!-- Login -->
+  <div
+    id="login"
+    class="flex flex-col items-center justify-center min-h-screen bg-white p-4"
+  >
+    <div class="w-full max-w-xs p-6 bg-gray-100 rounded shadow">
+      <h1 class="mb-4 text-center text-xl font-semibold">Sign In</h1>
+      <p
+        style="display: none"
+        class="loss text-sm mb-2 text-red-500 text-center"
+        id="loginError"
+      >
+        *Enter Valid Username or Password
+      </p>
+      <input
+        id="username1"
+        class="form-control form-control-sm mb-2"
+        type="text"
+        placeholder="Username"
+      />
+      <input
+        id="password"
+        class="form-control form-control-sm mb-3"
+        type="password"
+        placeholder="Password"
+      />
+      <button
+        class="btn btn-primary w-full"
+        onclick="login(username1.value,password.value)"
+      >
+        Sign In
+      </button>
+    </div>
+  </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-        crossorigin="anonymous"></script>
+  <!-- Scripts -->
+  <script src="script.js"></script>
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+    crossorigin="anonymous"
+  ></script>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 </body>
-
 </html>

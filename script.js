@@ -67,12 +67,16 @@ function showDashboard() {
     userDetails.user.role,
     userDetails.tradeHistory
   );
+
+  const brokeragePaid = calculateTotalBrokeragePaid(userDetails.tradeHistory);
+
   const capital = userDetails?.cardData?.capital;
   const balance = capital + totalPnl;
   const gain = ((totalPnl / capital) * 100).toFixed(1);
 
   document.getElementById("capital").innerHTML = capital + " INR";
   document.getElementById("pnl").innerHTML = totalPnl + " INR";
+  document.getElementById("brokeragePaid").innerHTML = brokeragePaid + " INR";
   document.getElementById("balance").innerHTML = balance + " INR";
   document.getElementById("gain").innerHTML =
     (gain > 0 ? "+" + gain : gain) + " %";
@@ -83,9 +87,15 @@ function showDashboard() {
   grouped = groupTradesByMonth(userDetails.tradeHistory, userDetails.user.role);
   console.log("📊 Grouped Monthly P&L:", grouped);
 
-  const monthlyTable = document.getElementById("monthlySummary");
-  monthlyTable.innerHTML = "";
+  const monthlyTableBody = document.getElementById("monthlySummary");
+  monthlyTableBody.innerHTML = "";
 
+  // Destroy existing DataTable if already initialized
+  if ($.fn.DataTable.isDataTable("#monthlySummaryTable")) {
+    $("#monthlySummaryTable").DataTable().clear().destroy();
+  }
+
+  // Render rows
   Object.entries(grouped).forEach(([monthYear, { totalPnL }]) => {
     const tr = document.createElement("tr");
 
@@ -98,15 +108,39 @@ function showDashboard() {
 
     tr.appendChild(tdMonth);
     tr.appendChild(tdPnL);
+    monthlyTableBody.appendChild(tr);
+  });
 
-    monthlyTable.appendChild(tr);
+  // Initialize DataTable
+  $("#monthlySummaryTable").DataTable({
+    pageLength: 5,
+    lengthChange: false,
+    ordering: true,
+    searching: true,
+    info: true,
+    responsive: true,
+    language: {
+      searchPlaceholder: "Search months...",
+      search: "",
+    },
+    dom:
+      "<'row mb-2'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 text-end'>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row mt-2'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
   });
 }
 
+let investmentTableInstance = null;
+
 function populateTable(role, data) {
+  if (investmentTableInstance) {
+    investmentTableInstance.clear().destroy();
+  }
+
   const tableBody = document.querySelector("#investmentTable tbody");
   tableBody.innerHTML = "";
-  const percentage = role === "family" ? 0.5 : 0.25;
+
+  const percentage = role === "family" ? 0.5 : role === "self" ? 1 : 0.25;
 
   data.forEach((item, i) => {
     const row = document.createElement("tr");
@@ -116,8 +150,12 @@ function populateTable(role, data) {
       item.name,
       item.type,
       item.direction === "+"
-        ? item.direction + " " + item.pnl * percentage
-        : item.direction + " " + item.pnl / 2,
+        ? item.direction +
+          " " +
+          (parseInt(item.pnl * percentage) - parseInt(item.marginUsed))
+        : item.direction +
+          " " +
+          (parseInt(item.pnl) + parseInt(item.marginUsed)),
       item.date,
     ];
 
@@ -130,26 +168,70 @@ function populateTable(role, data) {
 
     tableBody.appendChild(row);
   });
+
+  // Initialize DataTable only once
+  if ($.fn.DataTable.isDataTable("#investmentTable")) {
+    $("#investmentTable").DataTable().clear().destroy();
+  }
+
+  investmentTableInstance = $("#investmentTable").DataTable({
+    pageLength: 10,
+    lengthChange: false,
+    searching: true,
+    ordering: true,
+    info: true,
+    scrollX: true,
+    autoWidth: false,
+    responsive: true,
+    language: {
+      searchPlaceholder: "Search trades...",
+      search: "",
+    },
+    dom:
+      "<'row mb-2'<'col-sm-12 col-md-6'f><'col-sm-12 col-md-6 text-end'>>" +
+      "<'row'<'col-sm-12'tr>>" +
+      "<'row mt-2'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>",
+  });
+
+  // Fix search input styling
+  $(".dataTables_filter input").addClass("form-control form-control-sm").css({
+    width: "100%",
+    maxWidth: "250px",
+    display: "inline-block",
+  });
 }
 
 function calculateTotalPnL(role, data) {
   return data.reduce((sum, item) => {
-    const percentage = role === "family" ? 0.5 : 0.25;
-    return item.direction === "+"
-      ? sum + item.pnl * percentage
-      : sum - item.pnl / 2;
+    console.log("sum item", sum, item);
+    const percentage = role === "family" ? 0.5 : role === "self" ? 1 : 0.25;
+    let value =
+      item.direction === "+"
+        ? sum + (parseInt(item.pnl * percentage) - parseInt(item.marginUsed))
+        : sum - (parseInt(item.pnl) + parseInt(item.marginUsed));
+    return value;
+  }, 0);
+}
+
+function calculateTotalBrokeragePaid(data) {
+  return data.reduce((sum, item) => {
+    return sum + parseInt(item.marginUsed);
   }, 0);
 }
 
 function groupTradesByMonth(trades, role) {
   const grouped = {};
-  const percentage = role === "family" ? 0.5 : 0.25;
+  const percentage = role === "family" ? 0.5 : role === "self" ? 1 : 0.25;
 
   trades.forEach((trade) => {
     const [day, month, year] = trade.date.split("/");
     const key = `${month}/${year}`; // e.g., "01/2025"
     const pnlValue =
-      trade.direction === "+" ? trade.pnl * percentage : -trade.pnl / 2;
+      trade.direction === "+"
+        ? parseInt(trade.pnl * percentage) - parseInt(trade.marginUsed)
+        : -(parseInt(trade.pnl) + parseInt(trade.marginUsed));
+
+    console.log("pnlValue", pnlValue);
 
     if (!grouped[key]) {
       grouped[key] = {
